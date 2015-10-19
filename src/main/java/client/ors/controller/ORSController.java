@@ -128,6 +128,70 @@ public class ORSController {
 		//System.out.println(jobList.get(1).getJobName());
 		return "allTeamApplications";
 	}
+
+	@RequestMapping(value = "/jobInvResponse", method = RequestMethod.POST)
+	public String jobInvResponse(HttpServletRequest request) {
+		Application app = new Application();
+		String id = request.getParameter("appid");
+		app.setAppId(Integer.parseInt(request.getParameter("appid")));
+		app.setStatus(request.getParameter("decision"));
+		
+		List<Object> providers = new ArrayList<Object>();
+		providers.add( new JacksonJaxbJsonProvider() );
+	   
+		
+		WebClient reviewClient = WebClient.create(REST_URI, providers);
+		
+		reviewClient = reviewClient.path("/applications/" + id).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+		
+		reviewClient.put(app);
+		
+		String msg = "You response has been submitted";
+		
+		request.setAttribute("msg", msg);
+		
+		return "msg";
+	}
+	
+	@RequestMapping(value = "/submitReview", method = RequestMethod.POST)
+	public String submitReview(HttpServletRequest request) {
+		Review review = new Review();
+		String id = request.getParameter("appid");
+		review.setAppId(Integer.parseInt(request.getParameter("appid")));
+		review.setuId(request.getParameter("uid"));
+		review.setComments(request.getParameter("comment"));
+		review.setDecision(request.getParameter("decision"));
+		
+		RegisteredUser user = (RegisteredUser)request.getSession().getAttribute("user");
+		
+		List<Object> providers = new ArrayList<Object>();
+		providers.add( new JacksonJaxbJsonProvider() );
+	   
+		ObjectMapper mapper = new ObjectMapper();
+		
+		WebClient reviewClient = WebClient.create(REST_URI, providers);
+		String s = "";
+		
+		reviewClient = reviewClient.path("/reviews/createReview").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+		reviewClient.header("ShortKey", user.getShortKey());
+		
+		reviewClient.post(review);
+		
+		reviewClient = WebClient.create(REST_URI, providers);
+		
+		reviewClient = reviewClient.path("/applications/" + id).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+		Application app = new Application();
+		app.setAppId(Integer.parseInt(request.getParameter("appid")));
+		app.setStatus(request.getParameter("decision"));
+		
+		reviewClient.put(app);
+		
+		String msg = "The review has been submitted";
+		
+		request.setAttribute("msg", msg);
+		
+		return "msg";
+	}
 	
 	@RequestMapping(value = "/displayJob", method = RequestMethod.GET)
 	public String displayJob(HttpServletRequest request) {
@@ -165,9 +229,24 @@ public class ORSController {
 		appClient.query("appID", appIdString);
 		
 		Application app = appClient.get(Application.class);
-
-		request.setAttribute("app", app);
 		
+		RegisteredUser user = (RegisteredUser)request.getSession().getAttribute("user");
+		AutoCheck autocheck = null;
+		Review review = null;
+		
+		if(app != null) {
+			if(user != null && user.getRole().equals("reviewer")){
+				appClient = WebClient.create(REST_URI, providers);
+				appClient = appClient.path("/AutoCheck/byappid/" + app.getAppId()).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+				autocheck = appClient.get(AutoCheck.class);
+			}
+			appClient = WebClient.create(REST_URI, providers);
+			appClient = appClient.path("/reviews/byappid/" + app.getAppId()).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+			review = appClient.get(Review.class);
+		}
+		request.setAttribute("app", app);
+		request.setAttribute("autocheck", autocheck);
+		request.setAttribute("review", review);
 		return "displayApplication";
 	}
 	
