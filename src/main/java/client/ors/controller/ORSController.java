@@ -17,8 +17,11 @@ public class ORSController {
 	
 	@RequestMapping(value="/viewLogin", method = RequestMethod.GET)
 	public String login(ModelMap model) {
+		
 		return "login";
 		
 	}
+	
+	//TO DO
 	
 }
