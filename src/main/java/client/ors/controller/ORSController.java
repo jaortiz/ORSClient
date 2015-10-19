@@ -17,6 +17,18 @@ public class ORSController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(HttpServletRequest request) {
+		WebClient jobClient = WebClient.create(REST_URI);
+		String s = "";
+
+		// Try various methods for testing the service using this client.
+
+		// Get all books
+		jobClient.path("/jobPostings").accept(MediaType.APPLICATION_JSON);
+		s = jobClient.get(String.class);
+		System.out.println("Get all Jobs --");
+        System.out.println(s);
+		
+		
 		
 		return "home";
 	}
