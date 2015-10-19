@@ -11,9 +11,9 @@
         	</a>
         
         <div class="navbar-collapse collapse">
-	            <form action="search" method="get" class="navbar-form navbar-left">
+	            <form action="SearchJobs" method="get" class="navbar-form navbar-left">
 					<div class="form-group">
-		                <input placeholder="Search for jobs" class="form-control" name="job" type="text" />
+		                <input placeholder="Search by job name" class="form-control" name="jobname" type="text" />
 		            </div>
 		            <input type="submit" value="Search" class="btn btn-success" />
 		            <a href="advancedSearch.jsp" class="btn btn-link btn-sm">Advanced Search</a>

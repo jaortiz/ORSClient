@@ -17,9 +17,21 @@
 				<h1>Online Recruitment Service</h1>
 			</header>
 			<br>
-			<form action="viewLogin" method="get">
-				<input class="btn" type="submit" value="Login">
-			</form>
+			
+			<table class="table table-striped" style="width:50%" align="CENTER">
+			<tr>
+				<th> Job </th>
+				<th> Description </th>
+			</tr>
+			<c:forEach var="job" items="${jobList}" varStatus="i">
+			<tr>
+					<td> <a href="displayJob?jobid=${job.jobId}"">${job.jobName}</a> </td>
+					<td> ${job.description} </td>
+				</form>
+			</tr>	
+		
+			</c:forEach>
+			</table>
 	
 		</div>
 	</body>
