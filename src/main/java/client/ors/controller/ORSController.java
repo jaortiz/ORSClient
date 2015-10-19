@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import client.ors.model.Application;
+import client.ors.model.AssignedApplication;
 import client.ors.model.JobPosting;
+import client.ors.model.RegisteredUser;
 
 @Controller
 public class ORSController {
@@ -95,6 +97,39 @@ public class ORSController {
         System.out.println(s);
 		//System.out.println(jobList.get(1).getJobName());
 		return "home";
+	}
+	
+	@RequestMapping(value = "/TeamApplications", method = RequestMethod.GET)
+	public String TeamApplications(HttpServletRequest request) {
+		List<Object> providers = new ArrayList<Object>();
+		providers.add( new JacksonJaxbJsonProvider() );
+		
+		RegisteredUser user = (RegisteredUser) request.getSession().getAttribute("user");
+				
+		ObjectMapper mapper = new ObjectMapper();
+		
+		WebClient appClient = WebClient.create(REST_URI, providers);
+		String s = "";
+
+		appClient = appClient.path("/assignedApplicationByTeam/" + user.getDepartment()).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+				
+		List<AssignedApplication> assignedAppList = (ArrayList<AssignedApplication>) appClient.getCollection(AssignedApplication.class);
+		List<Application> appList = new ArrayList<Application>();
+		int i = 0;
+		
+		while (assignedAppList != null && assignedAppList.get(i) != null) {
+			appClient = WebClient.create(REST_URI, providers);
+			appClient = appClient.path("/viewByID").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+			appClient.query("appID", assignedAppList.get(i).getAppId());
+			appList.add(appClient.get(Application.class));
+		}
+			
+		request.setAttribute("appList", appList);
+		
+		System.out.println("Get all Jobs --");
+        System.out.println(s);
+		//System.out.println(jobList.get(1).getJobName());
+		return "allTeamApplications";
 	}
 	
 	@RequestMapping(value = "/displayJob", method = RequestMethod.GET)
