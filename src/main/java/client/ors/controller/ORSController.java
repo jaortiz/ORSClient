@@ -8,11 +8,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -83,6 +86,9 @@ public class ORSController {
 		
 		request.setAttribute("jobList", jobList);
 		
+		System.out.println("Get all Jobs --");
+        System.out.println(s);
+		//System.out.println(jobList.get(1).getJobName());
 		return "home";
 	}
 	
@@ -197,7 +203,7 @@ public class ORSController {
 		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		
+		String s = "";
 		WebClient userClient = WebClient.create(REST_URI);
 		
 		userClient.path("/RegisteredUser/login").type(MediaType.APPLICATION_FORM_URLENCODED).accept(MediaType.APPLICATION_JSON);
@@ -206,6 +212,17 @@ public class ORSController {
 		form.param("password",password);
 		
 		userClient.post(form);
+		Response response = userClient.post(form);
+		
+		if(response.readEntity(String.class).equals("true")) {
+			HttpSession session = request.getSession(true);		//if no session create one
+			session.setAttribute("user", username);
+		} else {
+			System.out.println("Incorrect Username or password");
+		}
+		
+		
+		
 		
 		return "home";
 	}
