@@ -52,6 +52,11 @@ public class ORSController {
 		return "home";
 	}
 	
+	@RequestMapping(value = "/advancedSearch", method = RequestMethod.GET)
+	public String advancedSearch(HttpServletRequest request) {
+		return "advancedSearch";
+	}
+	
 	@RequestMapping(value = "/SearchJobs", method = RequestMethod.GET)
 	public String SearchJobs(HttpServletRequest request) {
 		List<Object> providers = new ArrayList<Object>();

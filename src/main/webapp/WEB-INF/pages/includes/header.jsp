@@ -16,7 +16,7 @@
 		                <input placeholder="Search by job name" class="form-control" name="jobname" type="text" />
 		            </div>
 		            <input type="submit" value="Search" class="btn btn-success" />
-		            <a href="advancedSearch.jsp" class="btn btn-link btn-sm">Advanced Search</a>
+		            <a href="advancedSearch" class="btn btn-link btn-sm">Advanced Search</a>
 				</form>
 	            
 	            
