@@ -1,14 +1,22 @@
 package client.ors.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import client.ors.model.JobPosting;
 
 @Controller
 public class ORSController {
@@ -17,18 +25,22 @@ public class ORSController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(HttpServletRequest request) {
-		WebClient jobClient = WebClient.create(REST_URI);
+		List<Object> providers = new ArrayList<Object>();
+		providers.add( new JacksonJaxbJsonProvider() );
+	   
+		ObjectMapper mapper = new ObjectMapper();
+		
+		WebClient jobClient = WebClient.create(REST_URI, providers);
 		String s = "";
 
-		// Try various methods for testing the service using this client.
-
-		// Get all books
-		jobClient.path("/jobPostings").accept(MediaType.APPLICATION_JSON);
+		jobClient = jobClient.path("/jobPostings/2").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+		
+		JobPosting job = jobClient.get(JobPosting.class);
+	    System.out.println("-\n-\n-\n-\n");
+		System.out.println("Job:" + job.getJobName());
 		s = jobClient.get(String.class);
 		System.out.println("Get all Jobs --");
         System.out.println(s);
-		
-		
 		
 		return "home";
 	}
