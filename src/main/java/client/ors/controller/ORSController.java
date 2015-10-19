@@ -22,10 +22,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import client.ors.model.Application;
-import client.ors.model.AssignedApplication;
-import client.ors.model.JobPosting;
-import client.ors.model.RegisteredUser;
+import client.ors.model.*;
 
 @Controller
 public class ORSController {
