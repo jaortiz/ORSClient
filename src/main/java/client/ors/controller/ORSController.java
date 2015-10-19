@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ORSController {
 	
 	private static final String REST_URI = "http://localhost:8080/ORSRestfulService";
-	
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(HttpServletRequest request) {
 		
