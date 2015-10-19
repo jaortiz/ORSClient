@@ -11,14 +11,14 @@
         	</a>
         
         <div class="navbar-collapse collapse">
-	            <form method="get" action="dispatcher" class="navbar-form navbar-left">
-		            <input type="hidden" name="operation" value="searchitems">
-		            <div class="form-group">
-		                <input placeholder="Search for item" class="form-control" name="name" type="text" />
+	            <form action="search" method="get" class="navbar-form navbar-left">
+					<div class="form-group">
+		                <input placeholder="Search for jobs" class="form-control" name="job" type="text" />
 		            </div>
 		            <input type="submit" value="Search" class="btn btn-success" />
 		            <a href="advancedSearch.jsp" class="btn btn-link btn-sm">Advanced Search</a>
-	            </form>
+				</form>
+	            
 	            
 	            <div class="btn-group navbar-right" style="padding-top: 8px">
 	            	<form action="viewLogin" method="get">
