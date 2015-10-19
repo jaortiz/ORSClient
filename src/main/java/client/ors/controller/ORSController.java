@@ -1,5 +1,7 @@
 package client.ors.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,19 +11,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ORSController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(ModelMap model) {
+	public String home(HttpServletRequest request) {
 		
 		return "home";
 	}
 	
 	
 	@RequestMapping(value="/viewLogin", method = RequestMethod.GET)
-	public String login(ModelMap model) {
+	public String login(HttpServletRequest request) {
 		
 		return "login";
 		
 	}
 	
-	//TO DO
+	@RequestMapping(value = "/verifyLogin", method = RequestMethod.POST)
+	public String verifyLogin(HttpServletRequest request) {
+		
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		System.out.println(username + password);
+		
+		return "home";
+	}
 	
 }

@@ -8,7 +8,7 @@
 </head>
 <body>
 
-	<form action="login" method="post">
+	<form action="verifyLogin" method="post">
 		Username (UID):<br>
 		<input type="text" name="username" required> 
 		Password:<br>
