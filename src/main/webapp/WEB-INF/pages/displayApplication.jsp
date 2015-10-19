@@ -77,7 +77,21 @@
 	                </div>
 	            </div>
 	            <div class="controls" align="CENTER">
-        	        <a href="updateApplication?appid=${app.appId}" class="btn btn-success">Update</a>
+        	        <c:choose>
+	       				<c:when test="${user == null}">
+	       					<a href="updateApplication?appid=${app.appId}" class="btn btn-success">Update</a> 
+	       				</c:when>
+	       				<c:when test="${user.role eq 'reviewer'}">
+	       					<label> Comment about application:</label>
+	       					<form method="post" action="apply" class="form-add">
+	       						<textarea rows="4" cols="20" maxlength=1000 class="form-add-control" name="resume" required=""></textarea>
+	       						<div class="row">
+		       						<input type="submit" name="reject" value="Reject" class="btn btn-danger">
+									<input type="submit" name="shortlist" value="Shortlist" class="btn btn-success">
+								</div>       						 
+	       				</c:when>
+	       			</c:choose>
+        	        
             	</div>
             </div>
 	
