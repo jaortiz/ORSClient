@@ -20,11 +20,25 @@
 				</form>
 	            
 	            
+	            
+	            
 	            <div class="btn-group navbar-right" style="padding-top: 8px">
-	            	<form action="viewLogin" method="get">
-						<input class="btn btn-sm btn-primary" type="submit" value="Login">
-					</form>
+		           	<c:choose>
+			           	<c:when test="${user != null}">
+			           		<c:if test="${user.role eq 'reviewer'}">
+			           			<form action="TeamApplications" method="get">
+									<input class="btn btn-sm btn-primary" type="submit" value="Review Applications">
+								</form>
+							</c:if>
+			           	</c:when>
+			           	<c:otherwise>
+			            	<form action="viewLogin" method="get">
+								<input class="btn btn-sm btn-primary" type="submit" value="Login">
+							</form>
+		            	</c:otherwise>
+	            	</c:choose>
 	            </div>
+	            
         </div>
         
     </div>

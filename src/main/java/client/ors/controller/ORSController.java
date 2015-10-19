@@ -108,17 +108,18 @@ public class ORSController {
 		WebClient appClient = WebClient.create(REST_URI, providers);
 		String s = "";
 
-		appClient = appClient.path("/assignedApplicationByTeam/" + user.getDepartment()).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+		appClient = appClient.path("applications/assignedApplicationByTeam/" + user.getDepartment()).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
 				
 		List<AssignedApplication> assignedAppList = (ArrayList<AssignedApplication>) appClient.getCollection(AssignedApplication.class);
 		List<Application> appList = new ArrayList<Application>();
 		int i = 0;
 		
-		while (assignedAppList != null && assignedAppList.get(i) != null) {
+		while (assignedAppList != null && !assignedAppList.isEmpty()) {
 			appClient = WebClient.create(REST_URI, providers);
-			appClient = appClient.path("/viewByID").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+			appClient = appClient.path("applications/viewByID").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
 			appClient.query("appID", assignedAppList.get(i).getAppId());
 			appList.add(appClient.get(Application.class));
+			i++;
 		}
 			
 		request.setAttribute("appList", appList);
@@ -237,7 +238,7 @@ public class ORSController {
 		if(app != null) {
 			if(user != null && user.getRole().equals("reviewer")){
 				appClient = WebClient.create(REST_URI, providers);
-				appClient = appClient.path("/AutoCheck/byappid/" + app.getAppId()).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+				appClient = appClient.path("/AutoCheck/byappid/" + appIdString).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
 				autocheck = appClient.get(AutoCheck.class);
 			}
 			appClient = WebClient.create(REST_URI, providers);
