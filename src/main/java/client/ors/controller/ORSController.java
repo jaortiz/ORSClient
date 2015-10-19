@@ -58,7 +58,7 @@ public class ORSController {
 		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		
+		String s = "";
 		WebClient userClient = WebClient.create(REST_URI);
 		
 		userClient.path("/RegisteredUser/login").type(MediaType.APPLICATION_FORM_URLENCODED).accept(MediaType.APPLICATION_JSON);
@@ -67,9 +67,9 @@ public class ORSController {
 		form.param("password",password);
 		
 		userClient.post(form);
-		//String result = userClient.get(String.class);
+		s = userClient.get(String.class);
 		
-		//System.out.println("Verified" + result);
+		System.out.println("Verified" + s);
 		
 		return "home";
 	}
