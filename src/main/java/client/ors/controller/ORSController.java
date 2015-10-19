@@ -33,15 +33,17 @@ public class ORSController {
 		WebClient jobClient = WebClient.create(REST_URI, providers);
 		String s = "";
 
-		jobClient = jobClient.path("/jobPostings/3").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+		jobClient = jobClient.path("/jobPostings").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
 		
-		JobPosting job = jobClient.get(JobPosting.class);
+		List<JobPosting> jobList = (ArrayList<JobPosting>) jobClient.getCollection(JobPosting.class);
+		
+		//JobPosting job = jobClient.get(JobPosting.class);
 	    System.out.println("-\n-\n-\n-\n");
-		System.out.println("Job:" + job.getJobName());
+		//System.out.println("Job:" + list.get(1).getJobName());
 		s = jobClient.get(String.class);
 		System.out.println("Get all Jobs --");
         System.out.println(s);
-		
+		System.out.println(jobList.get(1).getJobName());
 		return "home";
 	}
 	
