@@ -33,7 +33,7 @@ public class ORSController {
 		WebClient jobClient = WebClient.create(REST_URI, providers);
 		String s = "";
 
-		jobClient = jobClient.path("/jobPostings/2").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+		jobClient = jobClient.path("/jobPostings/3").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
 		
 		JobPosting job = jobClient.get(JobPosting.class);
 	    System.out.println("-\n-\n-\n-\n");
