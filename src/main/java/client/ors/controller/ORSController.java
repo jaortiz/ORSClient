@@ -254,14 +254,25 @@ public class ORSController {
 		
 		if(response.readEntity(String.class).equals("true")) {
 			HttpSession session = request.getSession(true);		//if no session create one
-			session.setAttribute("user", username);
+			
+			
+			List<Object> providers = new ArrayList<Object>();
+			providers.add( new JacksonJaxbJsonProvider() );
+		   
+			ObjectMapper mapper = new ObjectMapper();
+			
+			WebClient regUserClient = WebClient.create(REST_URI, providers);
+
+			regUserClient = regUserClient.path("/RegisteredUser/" + username).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+			
+			
+			RegisteredUser user = regUserClient.get(RegisteredUser.class);
+			System.out.println("User: " + user.getuId() + " Name: " + user.getFirstName());
+			session.setAttribute("user", user);
 		} else {
+			//CHANGE THIS TO DISPLAY ON A PAGE
 			System.out.println("Incorrect Username or password");
 		}
-		
-		
-		
-		
 		return "home";
 	}
 	
