@@ -5,11 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -43,7 +46,7 @@ public class ORSController {
 		s = jobClient.get(String.class);
 		System.out.println("Get all Jobs --");
         System.out.println(s);
-		System.out.println(jobList.get(1).getJobName());
+		//System.out.println(jobList.get(1).getJobName());
 		return "home";
 	}
 	
@@ -68,10 +71,17 @@ public class ORSController {
 		form.param("uid",username);
 		form.param("password",password);
 		
-		userClient.post(form);
-		s = userClient.get(String.class);
+		Response response = userClient.post(form);
 		
-		System.out.println("Verified" + s);
+		if(response.readEntity(String.class).equals("true")) {
+			HttpSession session = request.getSession(true);		//if no session create one
+			session.setAttribute("user", username);
+		} else {
+			System.out.println("Incorrect Username or password");
+		}
+		
+		
+		
 		
 		return "home";
 	}
