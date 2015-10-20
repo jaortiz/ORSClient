@@ -413,6 +413,35 @@ public class ORSController {
 		
 	}
 	
+	@RequestMapping(value="/processApplication", method = RequestMethod.GET)
+	public String processApplication(HttpServletRequest request) {
+		String appID = request.getParameter("appid");
+
+		List<Object> providers = new ArrayList<Object>();
+		providers.add( new JacksonJaxbJsonProvider() );
+	   
+		ObjectMapper mapper = new ObjectMapper();
+		
+		WebClient jobClient = WebClient.create(REST_URI, providers);
+		String s = "";
+		
+		RegisteredUser user = (RegisteredUser)request.getSession().getAttribute("user");
+		String shortkey = user.getShortKey();
+		
+		jobClient.path("/AutoCheck/check/" + appID).header("ShortKey",shortkey);
+		jobClient.put(appID);
+		System.out.println("AUTOCHECK WORKS");
+		
+		jobClient.back(true);
+		jobClient = jobClient.path("/applications/" + appID).accept(MediaType.APPLICATION_JSON).type(MediaType.TEXT_PLAIN);
+		jobClient.put("AIMS Project");
+		
+		String msg = "Application sent for processing";
+		request.setAttribute("msg", msg);
+		return "msg";
+		
+	}
+	
 	@RequestMapping(value="/updateJob", method = RequestMethod.POST)
 	public String viewUpdateJob(HttpServletRequest request) {
 		

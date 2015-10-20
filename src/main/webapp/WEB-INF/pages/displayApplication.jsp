@@ -160,6 +160,12 @@
 		       						<input type="submit" name="Submit" value="Submit" class="btn btn-success">
 		       					</form>	
 		       				</c:when>
+		       				<c:when test="${user.role eq 'manager'}">
+		       					<form method="get" action="processApplication" class="form-add">
+		       						<input type="hidden" name="appid" value="<c:out value="${app.appId}"/>"/>
+		       						<input type="submit" name="Submit" value="Send to Processing" class="btn btn-success">
+		       					</form>
+		       				</c:when>
 		       			</c:choose>
 	        	        
 	            	</div>

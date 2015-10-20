@@ -22,7 +22,7 @@
 	            
 	            
 	            
-	            <div class="btn-group navbar-right" style="padding-top: 8px">
+	            <div class="btn-group navbar-right" style="float: right; padding-top: 8px;">
 		           	<c:choose>
 			           	<c:when test="${user != null}">
 			           		<c:if test="${user.role eq 'reviewer'}">
@@ -31,11 +31,11 @@
 								</form>
 							</c:if>
 							<c:if test="${user.role eq 'manager'}">
-								<!--  
+								
 								<form action="viewJobs" method="get">
 									<input class="btn btn-sm btn-primary" type="submit" value="View Job Postings">
 								</form>
-								-->
+								
 								<form action="viewApplications" method="get">
 									<input class="btn btn-sm btn-primary" type="submit" value="View Applications">
 								</form>
