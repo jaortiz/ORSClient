@@ -156,7 +156,7 @@ public class ORSController {
 		List<Application> appList = new ArrayList<Application>();
 		int i = 0;
 		
-		while (assignedAppList != null && !assignedAppList.isEmpty()) {
+		while (assignedAppList != null && !assignedAppList.isEmpty() &&  i < assignedAppList.size()) {
 			appClient = WebClient.create(REST_URI, providers);
 			appClient = appClient.path("applications/viewByID").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
 			appClient.query("appID", assignedAppList.get(i).getAppId());
@@ -276,20 +276,34 @@ public class ORSController {
 		RegisteredUser user = (RegisteredUser)request.getSession().getAttribute("user");
 		AutoCheck autocheck = null;
 		Review review = null;
+		List<RegisteredUser> userList = null;
+		AssignedApplication assApp = null;
 		
 		if(app != null) {
 			if(user != null && user.getRole().equals("reviewer")){
 				appClient = WebClient.create(REST_URI, providers);
 				appClient = appClient.path("/AutoCheck/byappid/" + appIdString).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
 				autocheck = appClient.get(AutoCheck.class);
+				
+				appClient = WebClient.create(REST_URI, providers);
+				appClient = appClient.path("/applications/assignedApplication/" + appIdString).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+				assApp = appClient.get(AssignedApplication.class);
+			}
+			if(user != null && user.getRole().equals("manager")) {
+				WebClient regUserClient = WebClient.create(REST_URI, providers);
+				regUserClient = regUserClient.path("/RegisteredUser").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+				userList = (List<RegisteredUser>) regUserClient.getCollection(RegisteredUser.class);
 			}
 			appClient = WebClient.create(REST_URI, providers);
 			appClient = appClient.path("/reviews/byappid/" + app.getAppId()).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
 			review = appClient.get(Review.class);
 		}
+		int i = 0;
 		request.setAttribute("app", app);
 		request.setAttribute("autocheck", autocheck);
 		request.setAttribute("review", review);
+		request.setAttribute("userList", userList);
+		request.setAttribute("assApp", assApp);
 		return "displayApplication";
 	}
 	
@@ -432,9 +446,9 @@ public class ORSController {
 		jobClient.put(appID);
 		System.out.println("AUTOCHECK WORKS");
 		
-		jobClient.back(true);
-		jobClient = jobClient.path("/applications/" + appID).accept(MediaType.APPLICATION_JSON).type(MediaType.TEXT_PLAIN);
-		jobClient.put("AIMS Project");
+		jobClient = WebClient.create(REST_URI, providers);
+		jobClient = jobClient.path("/applications/assignApplication/" + appID).accept(MediaType.APPLICATION_JSON).type(MediaType.TEXT_PLAIN);
+		jobClient.put(request.getParameter("team"));
 		
 		String msg = "Application sent for processing";
 		request.setAttribute("msg", msg);

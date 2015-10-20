@@ -52,8 +52,12 @@
 		            	</c:otherwise>
 	            	</c:choose>
 	            </div>
-	            
+
         </div>
         
     </div>
 </div>
+
+	            <c:if test="${user.role eq 'manager'}">
+	            <div style="margin-top:10%"/>
+	            </c:if>

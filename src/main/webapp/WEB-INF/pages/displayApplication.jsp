@@ -80,7 +80,7 @@
 		            
 		            <div class="controls">
 	        	        <c:choose>
-		       				<c:when test="${user == null}">
+		       				<c:when test="${user == null && review == null}">
 		       					<div class="container">
 									<form method="post" action="updateApplication" class="form-add">
 										<div class="col-md-6">
@@ -136,13 +136,10 @@
 				       							</div>
 			       							</c:if>
 										</c:when>
-										<c:when test="${app.status eq 'created'}">
-					       					<a href="updateApplication?appid=${app.appId}" class="btn btn-success">Update</a> 
-										</c:when>
 									</c:choose>
 								</div>
 		       				</c:when>
-		       				<c:when test="${user.role eq 'reviewer'}">
+		       				<c:when test="${user.role eq 'reviewer' && user.department eq assApp.department}">
 		       					<c:if test="${autocheck != null && autocheck.result != null}">
 		       						<label>Auto Check Results:</label> <br>
 		       						<p>${autocheck.result}</p>
@@ -162,6 +159,16 @@
 		       				</c:when>
 		       				<c:when test="${user.role eq 'manager'}">
 		       					<form method="get" action="processApplication" class="form-add">
+		       						<div class="row">
+		       							<label> Assign to team: </label>
+		       							<c:if test="${userList != null}">
+			       							<c:forEach var="user" items="${userList}" varStatus="i">
+			       								<c:if test="${user.role eq 'reviewer'}">
+				       								<input type="radio" name="team" value="<c:out value="${user.department}"/>">${user.department}
+				       							</c:if>
+											</c:forEach>
+										</c:if>
+									</div>
 		       						<input type="hidden" name="appid" value="<c:out value="${app.appId}"/>"/>
 		       						<input type="submit" name="Submit" value="Send to Processing" class="btn btn-success">
 		       					</form>
