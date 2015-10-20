@@ -77,9 +77,45 @@
 		                    </div>
 		                </div>
 		            </div>
+		            
 		            <div class="controls">
 	        	        <c:choose>
 		       				<c:when test="${user == null}">
+		       					<div class="container">
+									<form method="post" action="updateApplication" class="form-add">
+										<div class="col-md-6">
+											<input type="hidden" name="appID" value="${app.appId}">
+											<label> First Name: </label>
+											<input placeholder="First Name" maxlength=100 class="form-add-control" name="firstName" type="text" required="">
+											<label> Surname:</label>
+											<input placeholder="Surname" class="form-add-control" name="surname" type="text" required="">
+											<label> Drivers Licence: </label>
+											<input placeholder="Drivers Licence" class="form-add-control" name="licence" type="number" required="">
+											<label> Email: </label>
+											<input placeholder="Email" class="form-add-control" name="email" type="text" required="">
+										</div>
+										<div class="col-md-6">
+											<label> Phone Number: </label>
+											<input placeholder="Phone Number" class="form-add-control" name="phone" type="text" required="">
+											<label> Post Code: </label>
+											<input placeholder="Post Code" class="form-add-control" name="postcode" min=0 type="number" required="">
+											<label> Cover Letter: </label>
+											<textarea rows="4" cols="20" maxlength=1000 class="form-add-control" name="cover" required=""></textarea>
+											<label> Resume: </label>
+											<textarea rows="4" cols="20" maxlength=1000 class="form-add-control" name="resume" required=""></textarea>
+										</div>
+									    <div class="row">
+									    	<div class="col-sm-8">
+									       		<label></label>
+									       	</div>
+									       	<div class="col-sm-4">
+									       		<input type="submit" name="addItem" value="Update Application" class="btn btn-primary"> 
+									       	</div>
+									   </div>
+									</form>
+								</div>
+		            
+		       					
 		       					<div align="CENTER">
 		       						<c:choose>
 			       						<c:when test="${review != null}">

@@ -43,7 +43,7 @@
 			       		<label></label>
 			       	</div>
 			       	<div class="col-sm-4">
-			       		<input type="submit" name="addItem" value="Add Item" class="btn btn-primary"> 
+			       		<input type="submit" name="addItem" value="Apply" class="btn btn-primary"> 
 			       	</div>
 			   </div>
 			</form>

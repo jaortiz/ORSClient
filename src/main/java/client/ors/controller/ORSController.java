@@ -51,6 +51,48 @@ public class ORSController {
 		return "home";
 	}
 	
+	@RequestMapping(value = "/viewJobs", method = RequestMethod.GET)
+	public String viewJobs(HttpServletRequest request) {
+		List<Object> providers = new ArrayList<Object>();
+		providers.add( new JacksonJaxbJsonProvider() );
+	   
+		ObjectMapper mapper = new ObjectMapper();
+		
+		WebClient jobClient = WebClient.create(REST_URI, providers);
+		String s = "";
+
+		jobClient = jobClient.path("/jobPostings").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+		
+		List<JobPosting> jobList = (ArrayList<JobPosting>) jobClient.getCollection(JobPosting.class);
+		
+		s = jobClient.get(String.class);
+		
+		request.setAttribute("jobList", jobList);
+		
+		return "home";
+	}
+	
+	@RequestMapping(value = "/viewApplications", method = RequestMethod.GET)
+	public String viewApplications(HttpServletRequest request) {
+		List<Object> providers = new ArrayList<Object>();
+		providers.add( new JacksonJaxbJsonProvider() );
+	   
+		ObjectMapper mapper = new ObjectMapper();
+		
+		WebClient appClient = WebClient.create(REST_URI, providers);
+		String s = "";
+
+		appClient = appClient.path("/applications/viewAll").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+		
+		List<Application> appList = (ArrayList<Application>) appClient.getCollection(Application.class);
+		
+		s = appClient.get(String.class);
+		
+		request.setAttribute("appList", appList);
+		
+		return "allApplications";
+	}
+	
 	@RequestMapping(value = "/advancedSearch", method = RequestMethod.GET)
 	public String advancedSearch(HttpServletRequest request) {
 		return "advancedSearch";
@@ -307,12 +349,143 @@ public class ORSController {
 		return "msg";
 	}
 	
+	@RequestMapping(value = "/createJob", method = RequestMethod.POST)
+	public String createJob(HttpServletRequest request) {
+		JobPosting job = new JobPosting();
+		job.setJobName(request.getParameter("jobName"));
+		job.setClosingDate(request.getParameter("closingDate"));
+		job.setSalary(Integer.parseInt(request.getParameter("salary")));
+		job.setPosition(request.getParameter("position"));
+		job.setLocation(request.getParameter("location"));
+		job.setDescription(request.getParameter("description"));
+		
+		List<Object> providers = new ArrayList<Object>();
+		providers.add( new JacksonJaxbJsonProvider() );
+	   
+		ObjectMapper mapper = new ObjectMapper();
+		
+		WebClient jobClient = WebClient.create(REST_URI, providers);
+		String s = "";
+		
+		RegisteredUser user = (RegisteredUser)request.getSession().getAttribute("user");
+		String shortkey = user.getShortKey();
+		
+		jobClient = jobClient.path("/jobPostings/createJobPosting").type(MediaType.APPLICATION_JSON).header("ShortKey",shortkey);
+		//URI appLoc = jobClient.post(job).getLocation();
+		jobClient.post(job);
+		String msg = "Job Created !";
+		
+		request.setAttribute("msg", msg);
+		
+		return "msg";
+	}
 	
+	
+	@RequestMapping(value="/archive", method = RequestMethod.GET)
+	public String archiveJob(HttpServletRequest request) {
+		
+		List<Object> providers = new ArrayList<Object>();
+		providers.add( new JacksonJaxbJsonProvider() );
+	   
+		ObjectMapper mapper = new ObjectMapper();
+		
+		WebClient jobClient = WebClient.create(REST_URI, providers);
+		String s = "";
+		
+		String jobID = request.getParameter("jobID");
+		RegisteredUser user = (RegisteredUser)request.getSession().getAttribute("user");
+		String shortkey = user.getShortKey();
+		
+		jobClient.path("/jobPostings/deleteJob/" + jobID).header("ShortKey",shortkey).delete();
+		//URI appLoc = jobClient.post(job).getLocation();
+		String msg = "Job Archived!";
+		
+		request.setAttribute("msg", msg);
+		
+		return "msg";
+		
+	}
 	
 	@RequestMapping(value="/viewLogin", method = RequestMethod.GET)
 	public String login(HttpServletRequest request) {
 		
 		return "login";
+		
+	}
+	
+	@RequestMapping(value="/updateJob", method = RequestMethod.POST)
+	public String viewUpdateJob(HttpServletRequest request) {
+		
+		int jobID = Integer.parseInt(request.getParameter("jobID"));
+		
+		JobPosting job = new JobPosting();
+		job.setJobId(jobID);
+		job.setJobName(request.getParameter("jobName"));
+		job.setClosingDate(request.getParameter("closingDate"));
+		job.setSalary(Integer.parseInt(request.getParameter("salary")));
+		job.setPosition(request.getParameter("position"));
+		job.setLocation(request.getParameter("location"));
+		job.setDescription(request.getParameter("description"));
+		
+		List<Object> providers = new ArrayList<Object>();
+		providers.add( new JacksonJaxbJsonProvider() );
+	   
+		ObjectMapper mapper = new ObjectMapper();
+		
+		WebClient jobClient = WebClient.create(REST_URI, providers);
+		String s = "";
+		
+		RegisteredUser user = (RegisteredUser)request.getSession().getAttribute("user");
+		String shortkey = user.getShortKey();
+		
+		jobClient = jobClient.path("/jobPostings/" + jobID).type(MediaType.APPLICATION_JSON).header("ShortKey",shortkey);
+		//URI appLoc = jobClient.post(job).getLocation();
+		jobClient.put(job);
+		
+		
+		String msg = "Job Updated!";
+		request.setAttribute("msg", msg);
+			
+		return "msg";
+		
+	}
+	
+	@RequestMapping(value = "/updateApplication", method = RequestMethod.POST)
+	public String updateApplication(HttpServletRequest request) {
+		int appID = Integer.parseInt(request.getParameter("appID"));
+		
+		Application app = new Application();
+		app.setAppId(appID);
+		app.setFirstName(request.getParameter("firstName"));
+		app.setLastName(request.getParameter("surname"));
+		app.setDriversLicence(Integer.parseInt(request.getParameter("licence")));
+		app.setEmail(request.getParameter("email"));
+		app.setPhoneNumber(request.getParameter("phone"));
+		app.setPostcode(Integer.parseInt(request.getParameter("postcode")));
+		app.setCoverLetter(request.getParameter("cover"));
+		app.setResume(request.getParameter("resume"));
+		
+		List<Object> providers = new ArrayList<Object>();
+		providers.add( new JacksonJaxbJsonProvider() );
+	   
+		ObjectMapper mapper = new ObjectMapper();
+		
+		WebClient jobClient = WebClient.create(REST_URI, providers);
+		String s = "";
+
+		jobClient = jobClient.path("/applications/" + appID).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON);
+		jobClient.put(app);
+		
+		String msg = "Application updated";
+		request.setAttribute("msg", msg);
+		
+		return "msg";
+	}
+	
+	@RequestMapping(value="/viewCreateJob", method = RequestMethod.GET)
+	public String viewCreateJob(HttpServletRequest request) {
+		
+		return "createJob";
 		
 	}
 	
@@ -350,8 +523,11 @@ public class ORSController {
 			System.out.println("User: " + user.getuId() + " Name: " + user.getFirstName());
 			session.setAttribute("user", user);
 		} else {
-			//CHANGE THIS TO DISPLAY ON A PAGE
 			System.out.println("Incorrect Username or password");
+			String msg = "Incorrect Username or password";
+			request.setAttribute("msg", msg);
+			return "msg";
+			
 		}
 		return "home";
 	}

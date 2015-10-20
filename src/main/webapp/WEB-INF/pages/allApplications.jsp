@@ -14,20 +14,26 @@
 	
 		<div class="container" style="width:55%">
 			<header>
-				<h1>Online Recruitment Service</h1>
+				<h1>All Applications</h1>
 			</header>
 			<br>
 			
-			<form action="verifyLogin" method="post">
-				Username (UID)<br>
-				<input type="text" name="username" required> 
-				<br>
-				Password 
-				<br>
-				<input type="password" name="password" required>
-				<br>
-				<input class="btn" type="submit" value="Login">
-			</form>
+			<table class="table table-striped" style="width:50%" align="CENTER">
+			<tr>
+				<th> Job Id </th>
+				<th> Application Id </th>
+				<th> Candidate Name </th>
+			</tr>
+			<c:forEach var="app" items="${appList}" varStatus="i">
+			<tr>
+					<td> <a href="displayJob?jobid=${app.jobId}">${app.jobId}</a> </td>
+					<td> <a href="displayApplication?appID=${app.appId}">${app.appId}</a> </td>
+					<td> ${app.firstName} ${app.lastName}</td>
+				</form>
+			</tr>	
+		
+			</c:forEach>
+			</table>
 	
 		</div>
 	</body>

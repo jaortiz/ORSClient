@@ -30,6 +30,20 @@
 									<input class="btn btn-sm btn-primary" type="submit" value="Review Applications">
 								</form>
 							</c:if>
+							<c:if test="${user.role eq 'manager'}">
+								<!--  
+								<form action="viewJobs" method="get">
+									<input class="btn btn-sm btn-primary" type="submit" value="View Job Postings">
+								</form>
+								-->
+								<form action="viewApplications" method="get">
+									<input class="btn btn-sm btn-primary" type="submit" value="View Applications">
+								</form>
+								
+								<form action="viewCreateJob" method="get">
+									<input class="btn btn-sm btn-primary" type="submit" value="Create Job">
+								</form>
+							</c:if>
 			           	</c:when>
 			           	<c:otherwise>
 			            	<form action="viewLogin" method="get">
